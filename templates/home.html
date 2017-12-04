@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <h2>Welcome to Markov Tweet Generator</h2>
+    <div id="melon-list" class="row">
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 melon-summary">
+
+              <div class="well">
+                  <h3><a href="">{{ user_data.name }}</a></h3>
+                  <a href="">
+                      <img src="{{user_data.profile_image_url}}" class="img-circle">
+                  </a>
+
+                  <div class="price">{{ user_data.screen_name }}</div>
+
+              </div>   
+          </div>
+      <div id="melon-list" class="row">
+      {% for s in statuses %}
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 melon-summary">
+
+              <div class="well">
+                  <h3>{{ s.text }}</a></h3>
+              </div>
+
+          </div>
+      {% endfor %}
+    </div>
+    </div>
+
+{% endblock %}

@@ -28,6 +28,9 @@ RETURN_URL = 'http://localhost:5000/oauth'
 
 @app.route('/')
 def index():
+    # if session['user_id']:
+    #     return redirect('/home')
+
     args = ["gettysburg.txt"]
     generator = MarkovGenerator()
     generator.open_and_read_file(args)
@@ -37,6 +40,21 @@ def index():
     print tweets
     return render_template("index.html", tweets=tweets)
     """Main page."""
+
+@app.route('/home')
+def home():
+    """Render main page"""
+    api = twitter.Api(
+                      consumer_key=os.environ['TWITTER_CONSUMER_KEY'],
+                      consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],
+                      access_token_key=session['oauth_token'],
+                      access_token_secret=session['oauth_token_secret'])
+
+    user_data = api.VerifyCredentials()
+    statuses = api.GetUserTimeline()
+    return render_template('home.html', user_data=user_data,
+                            statuses=statuses)
+
 
 @app.route('/register')
 def get_oauth_token():
@@ -53,7 +71,7 @@ def get_oauth_token():
             flash("Invalid response {}".format(resp['status']))
     # parse response params
     request_token = dict(urlparse.parse_qsl(content))
-    # check if callback is confirmed, else flash errors. 
+    # check if callback is confirmed, else flash errors.
     if request_token['oauth_callback_confirmed']:
         oauth_token = request_token['oauth_token']
         session['oauth_token'] = oauth_token #save in session
@@ -83,15 +101,14 @@ def oauth_process():
         access_token = get_access_token(oauth_verifier)
 
         if access_token:
+            session['oauth_token'] = access_token['oauth_token']
+            session['oauth_token_secret'] = access_token['oauth_token_secret']
             return redirect('/home')
-
     # If there is no access code, flash an error message
     else:
         flash('OAuth failed')
 
     return redirect('/')
-
-
 
 ######### Helper Functions #########
 
