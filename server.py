@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, flash, redirect, session, \
     jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from markov import *
-import twitter
+import tweepy
 import requests
 from jinja2 import StrictUndefined
 import json
@@ -28,58 +28,95 @@ RETURN_URL = 'http://localhost:5000/oauth'
 
 @app.route('/')
 def index():
-    # if session['user_id']:
-    #     return redirect('/home')
-
     args = ["gettysburg.txt"]
     generator = MarkovGenerator()
     generator.open_and_read_file(args)
     tweets = []
     for i in range(5):
         tweets.append(generator.make_text())
-    print tweets
     return render_template("index.html", tweets=tweets)
     """Main page."""
 
 @app.route('/home')
 def home():
-    """Render main page"""
-    api = twitter.Api(
-                      consumer_key=os.environ['TWITTER_CONSUMER_KEY'],
-                      consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],
-                      access_token_key=session['oauth_token'],
-                      access_token_secret=session['oauth_token_secret'])
+    """Render main page for logged in users"""
 
-    user_data = api.VerifyCredentials()
-    statuses = api.GetUserTimeline()
+    auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
+    #can be stored in db instead
+    auth.set_access_token(session['oauth_token'], session['oauth_token_secret'])
+    api = tweepy.API(auth)
+
+    # statuses = api.home_timeline()
+    # print statuses
+    user_data = api.me()
+    args = ["gettysburg.txt"]
+    generator = MarkovGenerator()
+    generator.open_and_read_file(args)
+    tweets = []
+    for i in range(2):
+        tweets.append(generator.make_text())
     return render_template('home.html', user_data=user_data,
-                            statuses=statuses)
+                           statuses=tweets)
+
+@app.route('/tweet/', methods=['GET'])
+def tweet():
+    """Tweet via API"""
+    auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET,
+        RETURN_URL)
+    #can be stored in db instead
+    auth.set_access_token(session['oauth_token'], session['oauth_token_secret'])
+    text = request.args.get('tweet')
+    api = tweepy.API(auth)
+    try:
+        api.update_status(text)
+        flash("Success!")
+        return redirect('/home')
+
+    except tweepy.TweepError as e:
+        flash("Error: {}".format(e.reason))
+        return redirect('/home')
+
+@app.route('/by-user')
+def create_random_tweet():
+    """Get user and create random tweet"""
+
+    auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET,
+        RETURN_URL)
+    auth.set_access_token(session['oauth_token'], session['oauth_token_secret'])
+    api = tweepy.API(auth)
+    user = request.args.get('user')
+    if not user:
+        flash('Please type a twitter handle')
+        return redirect('/home')
+    users_found = api.search_users(user)
+    print users_found
+
+
 
 
 @app.route('/register')
 def get_oauth_token():
     """
-    Send oauth request to twitter API and get token or display errors.
+    Send oauth request to twitter API and get request token or display errors.
     If successfull, will redirect user to Twitter's Approve/Deny page.
+
     """
     consumer = oauth.Consumer(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
     client = oauth.Client(consumer)
     # Get oauth request token:
     resp, content = client.request(REQUEST_TOKEN_URL, "GET")
-    #Any value other than 200 on status indicates a failure:
+    # Any value other than 200 on status indicates a failure:
     if resp['status'] != '200':
             flash("Invalid response {}".format(resp['status']))
     # parse response params
     request_token = dict(urlparse.parse_qsl(content))
     # check if callback is confirmed, else flash errors.
     if request_token['oauth_callback_confirmed']:
-        oauth_token = request_token['oauth_token']
-        session['oauth_token'] = oauth_token #save in session
-        oauth_token_secret = request_token['oauth_token_secret']
-        session['oauth_token_secret'] = oauth_token_secret
+        session['oauth_token'] = oauth_token = request_token['oauth_token']
+        session['token_secret'] = request_token['oauth_token_secret']
         # now we will redirect the user to Twitter's authorization page
         return redirect(AUTHORIZE_URL
-                        + "?oauth_token=" 
+                        + "?oauth_token="
                         + oauth_token)
     # if callback is not confirmed, flash errors and return to main page
     errors = request_token.get('errors')
@@ -90,17 +127,15 @@ def get_oauth_token():
 @app.route("/oauth")
 def oauth_process():
     """Redirect user to Twitter's Approve/Deny page."""
-
     # Upon a successful authentication we should have received a request
     # containing the oauth_token and oauth_verifier parameters.
     # the oauth token should be the same as received in /register.
-
     oauth_verifier = request.args.get('oauth_verifier')
     # TODO: check for oauth token
     if oauth_verifier:
         access_token = get_access_token(oauth_verifier)
-
         if access_token:
+            #store in session
             session['oauth_token'] = access_token['oauth_token']
             session['oauth_token_secret'] = access_token['oauth_token_secret']
             return redirect('/home')
@@ -117,7 +152,7 @@ def get_access_token(oauth_verifier):
 
     consumer = oauth.Consumer(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
     token = oauth.Token(session['oauth_token'],
-                        session['oauth_token_secret'])
+                        session['token_secret'])
     token.set_verifier(oauth_verifier)
     client = oauth.Client(consumer, token)
     # Make a post request with the oauth verifier

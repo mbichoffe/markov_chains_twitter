@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import os, sys
 import re
-import twitter
 from random import choice
 from textblob import TextBlob #NLP 
 

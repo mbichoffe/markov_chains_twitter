@@ -3,7 +3,7 @@
 {% block body %}
     <h2>Welcome to Markov Tweet Generator</h2>
     <div id="melon-list" class="row">
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 melon-summary">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 melon-summary">
 
               <div class="well">
                   <h3><a href="">{{ user_data.name }}</a></h3>
@@ -11,21 +11,28 @@
                       <img src="{{user_data.profile_image_url}}" class="img-circle">
                   </a>
 
-                  <div class="price">{{ user_data.screen_name }}</div>
+                  <div class="price">@{{ user_data.screen_name }}</div>
 
               </div>   
           </div>
-      <div id="melon-list" class="row">
-      {% for s in statuses %}
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 melon-summary">
-
-              <div class="well">
-                  <h3>{{ s.text }}</a></h3>
-              </div>
-
-          </div>
-      {% endfor %}
     </div>
-    </div>
+
+      <h2> Tweet one of our randomly generated, organic and cage-free tweets:</h2>
+          {% for s in statuses %}
+          <form action="/tweet" method="GET">
+            <p>{{s}}</p>
+            <input type="hidden" name='tweet' value="{{ s }}">  
+            <br><br>
+            <input type="submit" value="Tweet this!"> 
+          </form>
+          {% endfor %}
+      </div>
+      <div>
+        <h2>Or choose a user and we will create a random tweet using their past tweets:</h2>
+        <form action="/by-user" method='GET'>
+          <input type="text" name='user' value="" placeholder="@user">  
+          <br><br>
+          <input type="submit" value="Find user!"> 
+        </form>
 
 {% endblock %}
