@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 from flask import Flask, render_template, request, flash, redirect, session, \
     jsonify
 from flask_debugtoolbar import DebugToolbarExtension
@@ -8,7 +9,9 @@ import tweepy
 import requests
 from jinja2 import StrictUndefined
 import json
+from pprint import pformat
 import urlparse
+from tweets_grabber import *
 import oauth2 as oauth
 # import calendar
 app = Flask(__name__)
@@ -28,7 +31,7 @@ RETURN_URL = 'http://localhost:5000/oauth'
 
 @app.route('/')
 def index():
-    args = ["gettysburg.txt"]
+    args = "gettysburg.txt"
     generator = MarkovGenerator()
     generator.open_and_read_file(args)
     tweets = []
@@ -49,7 +52,7 @@ def home():
     # statuses = api.home_timeline()
     # print statuses
     user_data = api.me()
-    args = ["gettysburg.txt"]
+    args = "gettysburg.txt"
     generator = MarkovGenerator()
     generator.open_and_read_file(args)
     tweets = []
@@ -77,22 +80,38 @@ def tweet():
         return redirect('/home')
 
 @app.route('/by-user')
-def create_random_tweet():
+def display_results():
     """Get user and create random tweet"""
 
-    auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET,
-        RETURN_URL)
-    auth.set_access_token(session['oauth_token'], session['oauth_token_secret'])
-    api = tweepy.API(auth)
     user = request.args.get('user')
     if not user:
         flash('Please type a twitter handle')
         return redirect('/home')
-    users_found = api.search_users(user)
-    print users_found
+    results = get_list_of_users_by_name(user)
 
+    return render_template('search-results.html',
+                           users=results,
+                           search_term=user)
 
-
+@app.route('/markov-tweet/<screen_name>')
+def markov_tweet(screen_name):
+    """get random Tweets"""
+    auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
+    #can be stored in db instead
+    auth.set_access_token(session['oauth_token'], session['oauth_token_secret'])
+    api = tweepy.API(auth)
+    # statuses = api.home_timeline()
+    # print statuses
+    user_data = api.me()
+    tweets = get_all_tweets(screen_name)
+    args = os.getcwd() +'/data/'+screen_name+'.txt'
+    generator = MarkovGenerator()
+    generator.open_and_read_file(args)
+    tweets = []
+    for i in range(2):
+        tweets.append(generator.make_text())
+    return render_template('home.html', user_data=user_data,
+                           statuses=tweets)
 
 @app.route('/register')
 def get_oauth_token():
@@ -165,6 +184,30 @@ def get_access_token(oauth_verifier):
     access_token = dict(urlparse.parse_qsl(content))
 
     return access_token
+
+def get_list_of_users_by_name(username):
+    """Returns API search for users in User object form."""
+    auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
+    auth.set_access_token(session['oauth_token'], session['oauth_token_secret'])
+    api = tweepy.API(auth)
+
+    users = []
+    for user in api.search_users(username, 20, 1):
+        user_data = {}
+        user_data['id'] = user.id
+        user_data['followers_count'] = user.followers_count
+        user_data['description'] = user.description
+        user_data['profile_image_url'] = user.profile_image_url
+        user_data['screen_name'] = user.screen_name
+        user_data['name'] = user.name
+        user_data['verified'] = user.verified
+        user_data['follow_request_sent'] = user.follow_request_sent
+        users.append(user_data)
+
+    return users
+
+
+
 
 
 app.jinja_env.undefined = StrictUndefined

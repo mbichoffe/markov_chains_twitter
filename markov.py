@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os, sys
 import re
+from text_stoppers import *
 from random import choice
 from textblob import TextBlob #NLP 
 
@@ -9,22 +10,16 @@ from textblob import TextBlob #NLP
 class MarkovGenerator(object):
     """A Markov chain text generator"""
 
-    def open_and_read_file(self, filenames):
+    def open_and_read_file(self, filename):
         """Take file(s) as tuples; return text as string.
 
-        Takes one or more strings that are a file path, opens the file,
+        Takes a string that is a file path, opens the file,
         and turns the files' contents as one string of text.
         """
-        body = []
-        print filenames
-        for filename in filenames:
-            f = open(filename, 'rU')
-            text = f.read()
-            body.append(text)
-            f.close()
-        # create single string
-        body = ' '.join(body)
-        self.make_chains(body)
+        f = open(filename, 'rU')
+        text = f.read()
+        f.close()
+        self.make_chains(text)
 
 
     def make_chains(self, text_string, n=2):
@@ -55,6 +50,7 @@ class MarkovGenerator(object):
         """
         self.chains = {}
         words = text_string.split()
+
         for i in range(len(words)-n):
             ngram = (words[i], words[i+1])
             next_word = words[i+n]
@@ -62,50 +58,30 @@ class MarkovGenerator(object):
             self.chains[ngram].append(next_word)
 
 
-    def stop_text(self, words, new_word):
-        """Should we stop making text?
-
-        In this base generator, we should continue until we reach the
-        end of our chain; in subclasses, we might stop on other conditions.
-        """
-
-        # This is just one way to think about this; there are many others.
-        #punctuation for now
-        ends_in_punct = new_word[-1] in ([".", "?", "!"])
-
-        passed_char_limit = len(" ".join(words)) + len(new_word) > 140
-
-        return passed_char_limit or ends_in_punct
-
-
     def make_text(self):
         """Take dictionary of markov chains; returns random text."""
 
-        #character limit
-        #punctuation
-        #bad words
-        #container for generated text
         words = []
 
+        char_limit = 280
+
         link = choice(self.chains.keys())#NPL
+        while not self.valid_p_o_s(link[0]):
+            link = choice(self.chains.keys())
         words += link[0], link[1]
 
-        while link in self.chains:
+        while link in self.chains and len(words) < char_limit:
             # Keep looping until we have a key that isn't in the chains
             # (which would mean it was the end of our original text)
-            #
-            # Note that for long texts (like a full book), this might mean
-            # it would run for a very long time.
             next_word = choice(self.chains[link])
-            # Should we stop here?
-            if self.stop_text(words, next_word):
-                break
-
             words.append(next_word)
+            # Should we stop here?
+            if stop_text(next_word):
+                break
             link = (link[1], next_word)#create new ngram
-            next_word = choice(self.chains[link])
 
         return " ".join(words)
+
 
     def make_and_post_tweets(random_text, markov_chains):
         """Create a tweet and send it to the Internet."""
@@ -113,23 +89,18 @@ class MarkovGenerator(object):
         # Use Python os.environ to get at environmental variables
         # Note: run `source secrets.sh` before running this file
         # to make sure these environmental variables are set.
-        api = twitter.Api(
-            consumer_key=os.environ['TWITTER_CONSUMER_KEY'],
-            consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],
-            access_token_key=os.environ['TWITTER_ACCESS_TOKEN_KEY'],
-            access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET'])
-
-        while True:
-            status = api.PostUpdate(make_text(markov_chains))
-            print status.text
-            print  # blank line
-            response = raw_input("Enter to tweet again [q to quit] > ")
-            if response.lower() == 'q':
-                break
-
+    def valid_p_o_s(self, word):
+        try:
+            print (word +'\'s part of speech:' + TextBlob(word).tags[0][1])
+            p_o_s = TextBlob(word).tags[0][1]
+            if p_o_s != 'CC' and p_o_s != 'TO' and p_o_s != 'MD' and p_o_s != 'IN':
+                return True
+            return False
+        except (IndexError, UnicodeDecodeError) as e:
+            print('Invalid character. Regenerating message!')
+            return False
 
 def main():
-
     args = sys.argv[1:]
     if not args:
         print "usage: textfile.txt [textfile2.txt...]"
@@ -138,11 +109,11 @@ def main():
     print "\n\n\nRegular Generator"
 
     generator = MarkovGenerator()
-    generator.open_and_read_file(args)
+    generator.open_and_read_file(args[0])
 
     for i in range(5):
         print generator.make_text()
-        print
+        print 
 
     #post tweets using Twitter API
     #make_and_post_tweets(random_text, markov_chains)
