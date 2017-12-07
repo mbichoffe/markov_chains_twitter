@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 import os, sys
 import re
+import codecs
 from text_stoppers import *
+from text_validators import *
 from random import choice
 from textblob import TextBlob #NLP 
 
@@ -16,7 +18,7 @@ class MarkovGenerator(object):
         Takes a string that is a file path, opens the file,
         and turns the files' contents as one string of text.
         """
-        f = open(filename, 'rU')
+        f = codecs.open(filename, encoding='utf-8')
         text = f.read()
         f.close()
         self.make_chains(text)
@@ -61,64 +63,52 @@ class MarkovGenerator(object):
     def make_text(self):
         """Take dictionary of markov chains; returns random text."""
 
-        words = []
-
+        words = [] # container for our random text
+        are_valid_words = False 
         char_limit = 280
 
-        link = choice(self.chains.keys())#NPL
-        while not self.valid_p_o_s(link[0]):
-            link = choice(self.chains.keys())
-        words += link[0], link[1]
+        while not are_valid_words:
+            link = choice(self.chains.keys()) #tuple from chain
+            word1 = link[0]
+            word2 = link[1]
+            print 'Checking words: ', word1, word2
+            # Is the first word an acceptable POS? Are the words valid?
+            are_valid_words = all([is_valid_p_o_s(word1), is_valid_word(word2),
+                                  is_valid_word(word1)])
+
+        words += word1.capitalize(), word2
 
         while link in self.chains and len(words) < char_limit:
             # Keep looping until we have a key that isn't in the chains
-            # (which would mean it was the end of our original text)
+            # Or until we reach one of the text stopper conditions
+            # Or we reach the 280 chars limit
+            # If picked word is invalid, choose a new onw
             next_word = choice(self.chains[link])
-            words.append(next_word)
-            # Should we stop here?
-            if stop_text(next_word):
-                break
+            if is_valid_word(next_word):
+                words.append(next_word)
+                # Should we stop here?
+                if stop_text(next_word):
+                    break
             link = (link[1], next_word)#create new ngram
 
         return " ".join(words)
 
 
-    def make_and_post_tweets(random_text, markov_chains):
-        """Create a tweet and send it to the Internet."""
-
-        # Use Python os.environ to get at environmental variables
-        # Note: run `source secrets.sh` before running this file
-        # to make sure these environmental variables are set.
-    def valid_p_o_s(self, word):
-        try:
-            print (word +'\'s part of speech:' + TextBlob(word).tags[0][1])
-            p_o_s = TextBlob(word).tags[0][1]
-            if p_o_s != 'CC' and p_o_s != 'TO' and p_o_s != 'MD' and p_o_s != 'IN':
-                return True
-            return False
-        except (IndexError, UnicodeDecodeError) as e:
-            print('Invalid character. Regenerating message!')
-            return False
-
-def main():
+def main(): # debugging
     args = sys.argv[1:]
     if not args:
         print "usage: textfile.txt [textfile2.txt...]"
         sys.exit(1)
 
-    print "\n\n\nRegular Generator"
+    print "\n\n\nMarkov Generator"
 
     generator = MarkovGenerator()
     generator.open_and_read_file(args[0])
 
     for i in range(5):
         print generator.make_text()
-        print 
+        print
 
-    #post tweets using Twitter API
-    #make_and_post_tweets(random_text, markov_chains)
-
-    #print random_text
 
 if __name__ == "__main__":
     main()

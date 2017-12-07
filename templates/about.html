@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <h2>About</h2>
+    
+        <p class="lead">This project is a take-home assignment that was incredibly fun to build.
+        It is a <a href=https://en.wikipedia.org/wiki/Markov_chain>Markov Chain</a> generator that takes in the tweets of a Twitter user and generates a random text based on those tweets.
+        The generated text can then be tweeted if the user is logged in to her Twitter account(via OAuth).
+        <p class="lead">In this project I've used <a href="http://tweepy.readthedocs.io/en/v3.5.0/index.html">Tweepy</a>, an open-source and easy-to-use library that allows your Python programming projects to access the Twitter API, but there are many other high-quality Python wrappers for Twitter out there.</p>
+        <p class="lead">The random text is generated through the creation of <a href="https://en.wikipedia.org/wiki/N-gram">n-grams</a>.
+        By analyzing the n-grams and listing which words most often follow a given n-gram, we can construct new text that sounds like the source text.
+        <p class="lead">I was inspired by much of what I've learned at Hackbright Academy and by some incredible repos like <a href='https://github.com/jsvine/markovify/tree/master/markovify'> Markovify</a>.
+        <p class="lead"> This project is built using python and flask, and there is still a lot to be done.
+        If you're interested in contributing to this project, please feel free to fork the repository and make some changes. I'm still a newbie, so please be nice :) I'll make sure to give you credit here once you send your pull request.</p>
+
+{% endblock %}

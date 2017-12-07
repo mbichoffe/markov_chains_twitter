@@ -1,25 +1,31 @@
 {% extends 'base.html' %}
 
 {% block body %}
+    <main role="main">
+       <!-- Jumbotron -->
+        <div class="jumbotron">
+          <h1>Welcome to Markov Tweet Generator!</h1>
+          <p class="lead">For a better experience, please <a href="/register">sign in</a> with Twitter.</p>
+          <p class="lead">A Markov Tweet Generator can be used to randomly generate (somewhat) realistic sentences, using words from a source text (like someone's tweet history). Words are joined together in sequence, with each new word being selected based on how often it follows the previous word in the source document.
 
-  <h1>Markov</h1>
+          The results are often just nonsense, but at times can be strangely poetic. 
+        <div class="row marketing">
+            <h2>Examples</h2>
+            <p class="lead">The following sentences were randomly generated from the text of Alice in Wonderland <i>(refresh your browser to see brand new ones)</i>: </p>
+            <ul class="list-group">
+                {% for tweet in tweets %}
+                <li class="list-group-item list-group-item-info">{{ tweet }}</li>  
+                {% endfor %}
+            </ul>
+          </div>
+        <div class="row marketing">
+          <h2>Ready to get started?</h2>
+          <p><a class="btn btn-block btn-social btn-twitter" href="/register">
+            <span class="fa fa-twitter"></span>
+              Sign in with Twitter
+              </a>
+          </p>
+        </div>
 
-  <h2>Tweets</h2>
-    <ul>
-      {% for tweet in tweets %}
-        <li>
-            {{ tweet }} 
-        </li>
-      {% endfor %}
-    </ul>
-    <h2>Sign in with Twitter</h2>
-
-      <p><a href="/register">Register with your twitter account!</a></p>
-
-    <h2>Log in</h2>
-
-      <p><a href="/register">Log in with your twitter account!</a></p>
-
-</body>
-</html>
+    </main>
 {% endblock %}

@@ -34,9 +34,3 @@ def stop_text(word):
     if word[-1] == '.' and not is_abbreviation(word):
         return True
     return False
-
-
-
-    
-
-    return ends_in_punct

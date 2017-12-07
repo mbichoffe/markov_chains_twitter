@@ -8,8 +8,6 @@ from markov import *
 import tweepy
 import requests
 from jinja2 import StrictUndefined
-import json
-from pprint import pformat
 import urlparse
 from tweets_grabber import *
 import oauth2 as oauth
@@ -31,28 +29,30 @@ RETURN_URL = 'http://localhost:5000/oauth'
 
 @app.route('/')
 def index():
-    args = "gettysburg.txt"
+    args = "alice_in_wonderland.txt"
     generator = MarkovGenerator()
     generator.open_and_read_file(args)
     tweets = []
-    for i in range(5):
+    for i in range(3):
         tweets.append(generator.make_text())
     return render_template("index.html", tweets=tweets)
     """Main page."""
+@app.route('/test')
+def test():
+    return render_template('test.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 @app.route('/home')
 def home():
     """Render main page for logged in users"""
-
-    auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
-    #can be stored in db instead
-    auth.set_access_token(session['oauth_token'], session['oauth_token_secret'])
-    api = tweepy.API(auth)
-
+    api = get_tweepy_api()
     # statuses = api.home_timeline()
     # print statuses
     user_data = api.me()
-    args = "gettysburg.txt"
+    args = "alice_in_wonderland.txt"
     generator = MarkovGenerator()
     generator.open_and_read_file(args)
     tweets = []
@@ -64,12 +64,9 @@ def home():
 @app.route('/tweet/', methods=['GET'])
 def tweet():
     """Tweet via API"""
-    auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET,
-        RETURN_URL)
-    #can be stored in db instead
-    auth.set_access_token(session['oauth_token'], session['oauth_token_secret'])
+    
     text = request.args.get('tweet')
-    api = tweepy.API(auth)
+    api = get_tweepy_api()
     try:
         api.update_status(text)
         flash("Success!")
@@ -87,6 +84,7 @@ def display_results():
     if not user:
         flash('Please type a twitter handle')
         return redirect('/home')
+
     results = get_list_of_users_by_name(user)
 
     return render_template('search-results.html',
@@ -96,10 +94,7 @@ def display_results():
 @app.route('/markov-tweet/<screen_name>')
 def markov_tweet(screen_name):
     """get random Tweets"""
-    auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
-    #can be stored in db instead
-    auth.set_access_token(session['oauth_token'], session['oauth_token_secret'])
-    api = tweepy.API(auth)
+    api = get_tweepy_api()
     # statuses = api.home_timeline()
     # print statuses
     user_data = api.me()
@@ -186,10 +181,11 @@ def get_access_token(oauth_verifier):
     return access_token
 
 def get_list_of_users_by_name(username):
-    """Returns API search for users in User object form."""
-    auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
-    auth.set_access_token(session['oauth_token'], session['oauth_token_secret'])
-    api = tweepy.API(auth)
+    """
+    Return list of dictionaries with each dictionary holding data returned from
+    Tweepy API search for users in User object form.
+    """
+    api = get_tweepy_api()
 
     users = []
     for user in api.search_users(username, 20, 1):
@@ -206,6 +202,11 @@ def get_list_of_users_by_name(username):
 
     return users
 
+def get_tweepy_api():
+    auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
+    #can be stored in db instead
+    auth.set_access_token(session['oauth_token'], session['oauth_token_secret'])
+    return tweepy.API(auth)
 
 
 
