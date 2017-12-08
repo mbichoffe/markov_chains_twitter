@@ -67,16 +67,15 @@ def checkError(response, screen_name):
                 wait(3)
                 get_all_tweets(screen_name)
             else:
-                print("\n*Error*\nUser: " + screen_name + " Message: " +
-                      message + ". Code: " + code + ".\n")
+                return("\n*Error*\nUser: " + screen_name + " Message: " +
+                       message + ". Code: " + code + ".\n")
                 pass
         else:
             if "Not authorized" in msg:
-                print("\n*Error*\nUser: " + screen_name +
-                      " Message: This account's tweets are protected.\n")
-                pass
+                return("\n*Error*\nUser: " + screen_name +
+                       " Message: This account's tweets are protected.\n")
             else:
-                print(msg)
+                return("\n*Error*", msg)
                 pass
 
 
@@ -141,9 +140,12 @@ def get_all_tweets(screen_name):
         get_all_tweets(screen_name)
 
     except tweepy.TweepError as e:
-        checkError(e.response, screen_name)
+        error_msg = checkError(e.response, screen_name)
+        if '\n*Error*' in error_msg:
+            return error_msg
+
 
     except IndexError:
-        print("\nUser \"" + screen_name +
-              "\" didn't have enough tweets to retrieve ...\n")
-        pass
+        return("\nUser \"" + screen_name +
+               "\" didn't have enough tweets to retrieve ...\n")
+

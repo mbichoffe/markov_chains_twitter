@@ -3,6 +3,10 @@
     <link rel="stylesheet"
           href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.css"/>
     <link rel="stylesheet" href="/static/css/site.css"/>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
+    <link href="../static/css/toolkit.css" rel="stylesheet">
+    
+    <link href="../static/css/application.css" rel="stylesheet">
 </head>
 
 <body>
@@ -23,11 +27,14 @@
                         About
                     </a>
                 </li>
+                {% if session.get('id') %}
                 <li>
-                  <a href="/register">
-                    <img class="melon-cart"
-                             src="/static/img/Twitter_logo_white.png">
-                    Log In
+                  <a href="/logout">
+                    <img class="melon-cart" src="/static/img/Twitter_logo_white.png"> Log Out</a>
+                </li>
+                {% else %}
+                <li><a href="/register"><img class="melon-cart" src="/static/img/Twitter_logo_white.png"> Log In</a></li>
+                {% endif %}
                   </a>
                 </li>
             </ul>

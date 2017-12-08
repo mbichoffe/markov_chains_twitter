@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block body %}
+     <main role="main">
+        <div class="jumbotron">
+          <h1>Here are some Markov Chain Tweets using @{{ screen_name }}'s Twitter timeline:</h1>
+        </div>
+              <div class="list-group">
+              {% for s in statuses %}
+              <div class="d-flex w-100 justify-content-between">
+              <form action="/tweet" method="GET">
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <p class="text-left">{{s}}</p>
+                <input type="hidden" name='tweet' value="{{ s }}">  
+                <input class="btn btn-xs btn-pill btn-primary" type="submit" value="Tweet">
+                </a> 
+              </form>
+            </div>
+              {% endfor %}
+            </div>
+        <div class="jumbotron">
+            <p><a class="btn btn-lg btn-pill btn-primary" href="/markov-tweet/{{ screen_name }}" role="button">Get more tweets</a></p>
+            <p class='lead'>or</p>
+            <p><a class="btn btn-lg btn-pill btn-default" href="/home" role="button">Back to main page</a></p>
+        </div>
+    </main>
+           
+{% endblock %}

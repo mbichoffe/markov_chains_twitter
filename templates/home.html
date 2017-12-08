@@ -1,38 +1,42 @@
 {% extends 'base.html' %}
 
 {% block body %}
-    <h2>Welcome to Markov Tweet Generator</h2>
-    <div id="melon-list" class="row">
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 melon-summary">
+     <main role="main">
+        <div class="jumbotron">
+          <h1>Welcome, {{ user_data.name }}</h1>
+              <p class="lead">Your most recent tweets:</p>
+        </div>
+        <div class="highlight">
+              <a class="twitter-timeline" data-height="400" data-dnt="true" data-theme="light" href="https://twitter.com/{{user_data.screen_name}}?ref_src=twsrc%5Etfw">Tweets by @{{user_data.screen_name}}</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div>
 
-              <div class="well">
-                  <h3><a href="">{{ user_data.name }}</a></h3>
-                  <a href="">
-                      <img src="{{user_data.profile_image_url}}" class="img-circle">
-                  </a>
-
-                  <div class="price">@{{ user_data.screen_name }}</div>
-
-              </div>   
-          </div>
-    </div>
-
-      <h2> Tweet one of our randomly generated, organic and cage-free tweets:</h2>
-          {% for s in statuses %}
-          <form action="/tweet" method="GET">
-            <p>{{s}}</p>
-            <input type="hidden" name='tweet' value="{{ s }}">  
-            <br><br>
-            <input type="submit" value="Tweet this!"> 
+        <div class="jumbotron">
+            <h2> Tweet one of our randomly generated, organic and cage-free tweets:</h2>
+        </div>
+            <div class="list-group">
+              {% for s in statuses %}
+              <div class="d-flex w-100 justify-content-between">
+              <form action="/tweet" method="GET">
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+                <p class="text-left">{{s}}</p>
+                <input type="hidden" name='tweet' value="{{ s }}">  
+                <input class="btn btn-xs btn-pill btn-primary" type="submit" value="Tweet">
+                </a> 
+              </form>
+            </div>
+              {% endfor %}
+            </div>
+          <div class="jumbotron">
+            <h2>Or search for a Twitter user to generate tweets using their timeline:</h2>
+          <form action="/by-user" method='GET'>
+            <input class="form-control form-control-lg" type="text" name='user' value="" placeholder="user name or @handle">
+            <small id="searchHelpBlock" class="form-text text-muted">
+            Please note that it only works for users with public profile.
+            </small><br>
+            <button class="btn btn-lg btn-pill btn-primary" type="submit">Find user</button>
           </form>
-          {% endfor %}
-      </div>
-      <div>
-        <h2>Or choose a user and we will create a random tweet using their past tweets:</h2>
-        <form action="/by-user" method='GET'>
-          <input type="text" name='user' value="" placeholder="@user">  
-          <br><br>
-          <input type="submit" value="Find user!"> 
-        </form>
+         </div>
+    </main>
+          
       </div>  
 {% endblock %}

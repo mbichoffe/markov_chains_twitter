@@ -1,26 +1,26 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<main role="main">
     <div class=container>
-    <h2>Users found with screen name <bold>{{ search_term }}</bold></h2>
-        <div id="melon-list" class="row">
-          {% for user in users %}
-              <div class="col-xs-3 col-md-5 melon-summary">
-
-                  <div class="well">
-                      <h3>{{user.name}}</h3>{% if user.verified -%}<img src='https://ton.twitter.com/hc_assets/1307051244_737.png'>{% endif %}
-                      <p><a href="https://twitter.com/{{ user.screen_name }}">@{{ user.screen_name }}</a></p>
-                      <a href="https://twitter.com/{{ user.screen_name }}">
-                          <img src="{{ user.profile_image_url }}" class="img-circle">
-                      </a>
-                      <div><p>{{ user.description }}</p>
-                      <a class="btn btn-primary" href="/markov-tweet/{{user.screen_name}}">That's the one!</a>
-                  </div>
-
-              </div>
+    <div class="m-t">
+  <div class="row">
+    {% for user in users %}
+    <div class="col-md-6">
+      <div class="panel panel-default panel-profile">
+        <div class="panel-heading" style="background-image: url({{user.profile_background_image_url}});"></div>
+        <div class="panel-body text-center">
+          <img class="panel-profile-img" src="{{user.profile_image_url}}">
+          <h5 class="panel-title">{{ user.name }}</h5>{% if user.verified -%}<span><img src='https://ton.twitter.com/hc_assets/1307051244_737.png'></span>{% endif %}
+          <p class="m-b-md">{{ user.description }}</p>
+          <a class="btn btn-primary-outline btn-sm" href="/markov-tweet/{{user.screen_name}}">This is the one!</a>
         </div>
-    {% endfor %}
+      </div>
     </div>
-
+    {% endfor %}
+  </div>
+    </div>
+    </div>
+</main>
 
 {% endblock %}

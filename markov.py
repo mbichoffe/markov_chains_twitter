@@ -64,7 +64,7 @@ class MarkovGenerator(object):
         """Take dictionary of markov chains; returns random text."""
 
         words = [] # container for our random text
-        are_valid_words = False 
+        are_valid_words = False
         char_limit = 280
 
         while not are_valid_words:
@@ -78,7 +78,7 @@ class MarkovGenerator(object):
 
         words += word1.capitalize(), word2
 
-        while link in self.chains and len(words) < char_limit:
+        while link in self.chains:
             # Keep looping until we have a key that isn't in the chains
             # Or until we reach one of the text stopper conditions
             # Or we reach the 280 chars limit
@@ -87,7 +87,7 @@ class MarkovGenerator(object):
             if is_valid_word(next_word):
                 words.append(next_word)
                 # Should we stop here?
-                if stop_text(next_word):
+                if stop_text(next_word) or len(words) > char_limit:
                     break
             link = (link[1], next_word)#create new ngram
 
