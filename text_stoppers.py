@@ -20,7 +20,7 @@ def is_abbreviation(word):
         return True
     return False
 
-def stop_text(word):
+def stop_text(word, words):
     """Should we stop making text?
     Other than reaching the 280 chars limit, check for words that indicate
     the end of a sentence.
@@ -32,5 +32,7 @@ def stop_text(word):
     if word[-1] in ['?', '!']:
         return True
     if word[-1] == '.' and not is_abbreviation(word):
+        return True
+    if len(" ".join(words)) >= 280:
         return True
     return False

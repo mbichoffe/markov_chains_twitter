@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os, sys
-import re
 import codecs
 from text_stoppers import *
 from text_validators import *
 from random import choice
-from textblob import TextBlob #NLP 
 
 
 class MarkovGenerator(object):
@@ -82,12 +79,13 @@ class MarkovGenerator(object):
             # Keep looping until we have a key that isn't in the chains
             # Or until we reach one of the text stopper conditions
             # Or we reach the 280 chars limit
-            # If picked word is invalid, choose a new onw
+            # If picked word is invalid, choose a new one
+
             next_word = choice(self.chains[link])
             if is_valid_word(next_word):
                 words.append(next_word)
                 # Should we stop here?
-                if stop_text(next_word) or len(words) > char_limit:
+                if stop_text(next_word, words):
                     break
             link = (link[1], next_word)#create new ngram
 
