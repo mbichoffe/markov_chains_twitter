@@ -9,27 +9,16 @@ import tweepy
 from jinja2 import StrictUndefined
 import urlparse
 from tweets_grabber import *
+from config import *
 from pagination import Pagination
 import oauth2 as oauth
 
 app = Flask(__name__)
 
-cache = Cache(app,config={'CACHE_TYPE': 'simple'})
-
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "AIRSPEEDVELOCITYOFANUNLADENSWALLOW"
 
-TWITTER_CONSUMER_KEY = os.environ.get('TWITTER_CONSUMER_KEY')
-TWITTER_CONSUMER_SECRET = os.environ.get('TWITTER_CONSUMER_SECRET')
-TWITTER_ACCESS_TOKEN_KEY = os.environ.get('TWITTER_ACCESS_TOKEN_KEY')
-TWITTER_ACCESS_TOKEN_SECRET = os.environ.get('TWITTER_ACCESS_TOKEN_SECRET')
-
-###ENDPOINTS###
-REQUEST_TOKEN_URL = 'https://api.twitter.com/oauth/request_token'
-ACCESS_TOKEN_URL = 'https://api.twitter.com/oauth/access_token'
-AUTHORIZE_URL = 'https://api.twitter.com/oauth/authorize'
-RETURN_URL = 'http://localhost:5000/oauth'
-PER_PAGE = 12
+cache = Cache(app,config={'CACHE_TYPE': 'simple'})
 
 
 @app.route('/')
