@@ -32,8 +32,25 @@
         "id_str":"939571579222089728",
         "text":"Paragraphs 1.E.1 through 1.E.7 or obtain permission in writing from both the Project Gutenberg-tm electronic work w\u2026 https:\/\/t.co\/koaUih91wZ",
         "truncated":true,
-        "entities":{"hashtags":[],"symbols":[],"user_mentions":[],"urls":[{"url":"https:\/\/t.co\/koaUih91wZ","expanded_url":"https:\/\/twitter.com\/i\/web\/status\/939571579222089728","display_url":"twitter.com\/i\/web\/status\/9\u2026","indices":[117,140]}]},
-        "source":"\u003ca href=\"http:\/\/marinabichoffe.com\" rel=\"nofollow\"\u003eMarina's Markov Tweets\u003c\/a\u003e","in_reply_to_status_id":null,"in_reply_to_status_id_str":null,"in_reply_to_user_id":null,"in_reply_to_user_id_str":null,"in_reply_to_screen_name":null,"geo":null,"coordinates":null,"place":null,"contributors":null,"is_quote_status":false,"retweet_count":0,"favorite_count":0,"favorited":false,"retweeted":false,"lang":"en"},
+        "entities":{
+            "hashtags":[],
+            "symbols":[],
+            "user_mentions":[],
+            "urls":[
+                {"url":"https:\/\/t.co\/koaUih91wZ",
+                "expanded_url":"https:\/\/twitter.com\/i\/web\/status\/939571579222089728",
+                "display_url":"twitter.com\/i\/web\/status\/9\u2026","indices":[117,140]}]},
+        "source":"\u003ca href=\"http:\/\/marinabichoffe.com\" rel=\"nofollow\"\u003eMarina's Markov Tweets\u003c\/a\u003e",
+                "in_reply_to_status_id":null,
+                "in_reply_to_status_id_str":null,
+                "in_reply_to_user_id":null,
+                "in_reply_to_user_id_str":null,
+                "in_reply_to_screen_name":null,
+                "geo":null,"coordinates":null,
+                "place":null,
+                "contributors":null
+                ,"is_quote_status":false,
+                "retweet_count":0,"favorite_count":0,"favorited":false,"retweeted":false,"lang":"en"},
     "profile_background_color":"F5F8FA",
     "profile_background_image_url":null,
     "profile_image_url":"http:\/\/abs.twimg.com\/sticky\/default_profile_images\/default_profile_normal.png",
@@ -46,3 +63,5 @@
     "follow_request_sent":false,}
 
 }
+
+
