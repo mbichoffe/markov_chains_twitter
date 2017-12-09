@@ -8,7 +8,7 @@
     { "id": 1, "body": "some comment", "postId": 1 },
     { "id": 2, "body": "some comment", "postId": 1 }
   ],
-  "user": [
+  "key": {"user":
       {
         "id": 937094981084262400,
         "id_str": "937094981084262400",
@@ -33,8 +33,8 @@
         "default_profile_image": true,
         "following": false,
         "follow_request_sent": false,
-        }
-    ]    
+        },
+    }  
 }
 
 
