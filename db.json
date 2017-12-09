@@ -11,7 +11,7 @@
   "profile": {
     "name": "typicode"
   },
-  "user": {
+  "user": [{
     "id":937094981084262400,
     "id_str":"937094981084262400",
     "name":"Corrente de Markov",
@@ -34,7 +34,7 @@
     "default_profile":true,
     "default_profile_image":true,
     "following":false,
-    "follow_request_sent":false,},
+    "follow_request_sent":false,}],
 
 }
 
