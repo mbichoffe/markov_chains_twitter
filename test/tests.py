@@ -46,7 +46,7 @@ class MarkovTweetTests(unittest.TestCase):
                                   data={'user': None},
                                   follow_redirects=True)
         self.assertIn("Please type a twitter handle", result.data)
-        
+
   @mock.patch.object(tweepy.API, 'update_status')
   def test_post_to_twitter(self, mock_update_status):
     ta = TwitterPost("fake auth token")

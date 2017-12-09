@@ -11,11 +11,9 @@
   "profile": {
     "name": "typicode"
   },
-  "user": [{
-    "id":937094981084262400,
-    "id_str":"937094981084262400",
-    "name":"Corrente de Markov",
-    }]
+  "user_data": {
+    "id":937094981084262400, "screen_name": "mock", "name":"Corrente de Markov", "profile_image_url": "url", "name" :"Mock user", "description" : "123", "verified": false
+  },
 }
 
 
