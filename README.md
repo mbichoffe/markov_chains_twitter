@@ -1,4 +1,4 @@
-# markov_chains_twitter
+
 # <img src="/static/img/AAMarkov.jpg">Markov Chains Tweet Generator</img>
 
 A Markov Tweet Generator can be used to randomly generate (somewhat) realistic sentences, using words from a source text (like someone's tweet history). Words are joined together in sequence, with each new word being selected based on how often it follows the previous word in the source document. The results are often just nonsense, but at times can be strangely poetic.
@@ -22,26 +22,26 @@ __APIs:__ Twitter (Tweepy Library) <br/>
 
 Main Page 
 
-![Main Page Logged out](/static/img/_readme-img/main-page.gif)
+![Main Page Logged out](/static/gif/main-page.gif)
 <br/><br/><br/>
 Log in with Twitter (via OAuth) 
   
-![Twitter Log In](/static/img/_readme-img/search-log-in-with-twitter.gif)
+![Twitter Log In](/static/gif/search-log-in-with-twitter.gif)
 <br/><br/><br/>
 Tweet one of the tweets generated via Markov Chains using Alice in Wonderland
 text:
   
-![Tweet Markov Chain](/static/img/_readme-img/tweet-1.gif)
+![Tweet Markov Chain](/static/gif/tweet-1.gif)
 <br/><br/><br/>
 Or search for Twitter accounts to generate tweets using their timeline:
   
-![Search](/static/img/_readme-img/search.gif)
+![Search](/static/gif/search.gif)
 <br>
-![Search](/static/img/_readme-img/search-results.gif)
+![Search](/static/gif/search-results.gif)
 <br/><br/><br/>
 Tweet the results! 🐦
   
-![Markov Chain Tweets](/static/img/_readme-img/tweet-2.gif)
+![Markov Chain Tweets](/static/gif/tweet-2.gif)
 
 ## <a name="installation"></a>Setup/Installation ⌨️
 
