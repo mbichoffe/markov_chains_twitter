@@ -32,19 +32,19 @@ class MarkovGenerator(object):
 
         For example:
 
-            >>> chains = make_chains("hi there mary hi there juanita")
+            chains = make_chains("hi there mary hi there juanita")
 
         Each bigram (except the last) will be a key in chains:
 
-            >>> sorted(chains.keys())
+            sorted(chains.keys())
             [('hi', 'there'), ('mary', 'hi'), ('there', 'mary')]
 
         Each item in chains is a list of all possible following words:
 
-            >>> chains[('hi', 'there')]
+            chains[('hi', 'there')]
             ['mary', 'juanita']
 
-            >>> chains[('there','juanita')]
+            chains[('there','juanita')]
             [None]
         """
         self.chains = {}
