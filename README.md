@@ -26,22 +26,22 @@ Main Page
 <br/><br/><br/>
 Log in with Twitter (via OAuth) 
   
-![Twitter Log In](/static/gif/search-log-in-with-twitter.gif)
+![Twitter Log In](/static/gifs/search-log-in-with-twitter.gif)
 <br/><br/><br/>
 Tweet one of the tweets generated via Markov Chains using Alice in Wonderland
 text:
   
-![Tweet Markov Chain](/static/gif/tweet-1.gif)
+![Tweet Markov Chain](/static/gifs/tweet-1.gif)
 <br/><br/><br/>
 Or search for Twitter accounts to generate tweets using their timeline:
   
-![Search](/static/gif/search.gif)
+![Search](/static/gifs/search.gif)
 <br>
-![Search](/static/gif/search-results.gif)
+![Search](/static/gifs/search-results.gif)
 <br/><br/><br/>
 Tweet the results! 🐦
   
-![Markov Chain Tweets](/static/gif/tweet-2.gif)
+![Markov Chain Tweets](/static/gifs/tweet-2.gif)
 
 ## <a name="installation"></a>Setup/Installation ⌨️
 
