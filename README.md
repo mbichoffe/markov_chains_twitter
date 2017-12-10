@@ -36,8 +36,7 @@ text:
 Or search for Twitter accounts to generate tweets using their timeline:
   
 ![Search](/static/gifs/search.gif)
-<br>
-![Search](/static/gifs/search-results.gif)
+
 <br/><br/><br/>
 Tweet the results! 🐦
   
