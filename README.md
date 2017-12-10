@@ -92,7 +92,7 @@ $ python server.py
 ## <a name="license"></a>License
 
 The MIT License (MIT)
-Copyright (c) 2016 Agne Klimaite 
+Copyright (c) 2017 Marina Bichoffe
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
