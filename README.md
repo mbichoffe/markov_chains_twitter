@@ -22,11 +22,11 @@ __APIs:__ Twitter (Tweepy Library) <br/>
 
 Main Page 
 
-![Main Page Logged out](/static/gif/main-page.gif)
+![Main Page Logged out](/static/gifs/main-page.gif)
 <br/><br/><br/>
 Log in with Twitter (via OAuth) 
   
-![Twitter Log In](/static/gifs/search-log-in-with-twitter.gif)
+![Twitter Log In](/static/gifs/log-in-with-twitter.gif)
 <br/><br/><br/>
 Tweet one of the tweets generated via Markov Chains using Alice in Wonderland
 text:
