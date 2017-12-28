@@ -53,7 +53,7 @@ def home():
         return render_template('home.html', user_data=user_data,
                                statuses=tweets)
     except tweepy.TweepError as e:
-        flash("Error: {} code: {}".format(e.reason))
+        flash("Error: {}".format(e.reason))
         return redirect('/')
 
 
