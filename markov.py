@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import codecs
+import sys
 from text_stoppers import *
 from text_validators import *
 from random import choice
