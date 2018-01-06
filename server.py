@@ -95,11 +95,6 @@ def markov_tweet(screen_name, page):
         print "get tweepy api", api
         user_data = api.me()
         print "user_data", user_data._json
-        tweets = get_all_tweets(screen_name)
-    except tweepy.TweepError as e:
-        flash("Error: {} ".format(e))
-        return redirect('/')
-    try:
         markov_tweets = get_markov_tweets(screen_name)
         pagination = Pagination(page, PER_PAGE)
         print pagination.page, pagination.per_page
@@ -108,10 +103,10 @@ def markov_tweet(screen_name, page):
                                statuses=markov_tweets,
                                screen_name=screen_name,
                                pagination=pagination,)
-    except IOError:
+    except (tweepy.TweepError, IOError) as e:
+        flash("Error: {} ".format(e))
         # Flash errors returned by the function
-        flash(tweets)
-        return redirect('/home')
+        return redirect('/')
 
 
 @app.route("/logout")
@@ -251,9 +246,12 @@ def get_markov_tweets(screen_name):
     Open txt file with scren_name's twitter timeline and create markov chain
     tweets from it.
     """
-    args = os.getcwd() + '/data/' + screen_name + '.txt'
+
+    file_path = os.getcwd() + '/data/' + screen_name + '.txt'
+    if not os.path.isfile(file_path):
+        get_all_tweets(screen_name)
     generator = MarkovGenerator()
-    generator.open_and_read_file(args)
+    generator.open_and_read_file(file_path)
     tweets = []
     for i in range(10):
         tweets.append(generator.make_text())
