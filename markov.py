@@ -61,12 +61,12 @@ class MarkovGenerator(object):
     def make_text(self):
         """Take dictionary of markov chains; returns random text."""
 
-        words = [] # container for our random text
+        words = [] 
         are_valid_words = False
         char_limit = 280
 
         while not are_valid_words:
-            link = choice(self.chains.keys()) #tuple from chain
+            link = choice(self.chains.keys()) 
             word1 = link[0]
             word2 = link[1]
             print 'Checking words: ', word1, word2
